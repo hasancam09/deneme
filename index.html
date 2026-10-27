@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YeşilGelecek | Modern Geri Dönüşüm ve Sıfır Atık Rehberi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        eco: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        earth: {
+                            600: '#78350f',
+                            700: '#451a03'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .pattern-dots {
+            background-image: radial-gradient(rgba(34, 197, 94, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Custom range slider styling */
+        input[type=range] {
+            accent-color: #16a34a;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-eco-200 selection:text-eco-900">
+
+    <!-- Toast Notification Box (Alternative to alert) -->
+    <div id="toastBox" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="flex items-center gap-3 bg-white text-slate-800 px-5 py-4 rounded-2xl shadow-2xl border border-eco-200">
+            <div id="toastIcon" class="w-10 h-10 rounded-xl bg-eco-100 text-eco-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <p id="toastTitle" class="font-bold text-sm text-slate-900">İşlem Başarılı</p>
+                <p id="toastMessage" class="text-xs text-slate-500">Talebiniz başarıyla kaydedildi.</p>
+            </div>
+            <button onclick="hideToast()" class="ml-2 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-eco-700 to-eco-500 flex items-center justify-center text-white shadow-lg shadow-eco-500/25 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-recycle text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">Yeşil<span class="text-eco-600">Gelecek</span></span>
+                    <span class="text-[10px] font-semibold text-eco-700 tracking-wider uppercase">Döngüsel Yaşam Rehberi</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <a href="#istatistikler" class="hover:text-eco-600 transition-colors">Etki Verileri</a>
+                <a href="#rehber" class="hover:text-eco-600 transition-colors">Atık Rehberi</a>
+                <a href="#hesaplayici" class="hover:text-eco-600 transition-colors">Etki Hesaplayıcı</a>
+                <a href="#ipuclari" class="hover:text-eco-600 transition-colors">Sıfır Atık İpuçları</a>
+                <a href="#sss" class="hover:text-eco-600 transition-colors">S.S.S</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-3">
+                <a href="#hesaplayici" class="px-5 py-2.5 rounded-xl bg-eco-600 hover:bg-eco-700 text-white font-semibold text-sm shadow-md shadow-eco-600/20 transition-all hover:shadow-lg hover:-translate-y-0.5">
+                    <i class="fa-solid fa-calculator mr-2 text-xs"></i>Tasarruf Hesapla
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobileMenuBtn" aria-label="Menüyü Aç" class="md:hidden p-2 text-slate-600 hover:text-eco-600 rounded-xl focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-slate-100 px-6 py-6 space-y-4 shadow-xl">
+            <a href="#istatistikler" class="block text-slate-700 font-medium hover:text-eco-600">Etki Verileri</a>
+            <a href="#rehber" class="block text-slate-700 font-medium hover:text-eco-600">Atık Ayrıştırma Rehberi</a>
+            <a href="#hesaplayici" class="block text-slate-700 font-medium hover:text-eco-600">Etki Hesaplayıcı</a>
+            <a href="#ipuclari" class="block text-slate-700 font-medium hover:text-eco-600">Sıfır Atık İpuçları</a>
+            <a href="#sss" class="block text-slate-700 font-medium hover:text-eco-600">Sıkça Sorulan Sorular</a>
+            <a href="#hesaplayici" class="block text-center w-full py-3 rounded-xl bg-eco-600 text-white font-semibold text-sm">
+                Hesaplamaya Başla
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden pattern-dots">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-eco-100 text-eco-800 text-xs font-bold uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-eco-500 animate-pulse"></span> Gezegenimiz İçin İkinci Bir Şans
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+                        Doğru Ayrıştır, <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-eco-600 to-teal-500">Dünyayı Yeniden</span> Yaşat.
+                    </h1>
+                    <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                        Her atık bir çöp değil; doğru ayrıştırıldığında geleceğin ham maddesidir. Hangi atığın nereye atılacağını öğrenin, kişisel karbon tasarrufunuzu hesaplayın ve sıfır atık hareketine katılın.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#rehber" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-eco-600 hover:bg-eco-700 text-white font-bold text-center shadow-lg shadow-eco-600/30 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> Nereye Atılır? Hemen Bul
+                        </a>
+                        <a href="#hesaplayici" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-center transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-leaf text-eco-600"></i> Etkini Hesapla
+                        </a>
+                    </div>
+                    <!-- Quick Badges -->
+                    <div class="pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 font-medium">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-eco-600"></i> %100 Doğrulanmış Çevre Verileri</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-seedling text-eco-600"></i> Sıfır Atık Yönetmeliği Uyumlu</span>
+                    </div>
+                </div>
+
+                <!-- Hero Visual / Dynamic Card -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-earth-americas"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">Geri Dönüşüm Döngüsü</h4>
+                                    <p class="text-xs text-slate-400">Doğaya geri kazandırılan değer</p>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-eco-50 text-eco-700">Canlı Metrik</span>
+                        </div>
+
+                        <!-- Mini stats in card -->
+                        <div class="space-y-4">
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm"><i class="fa-solid fa-bottle-water"></i></span>
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-800">1 Ton Plastik</p>
+                                        <p class="text-[11px] text-slate-400">Geri dönüştürüldüğünde</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-eco-600">+%66 Enerji Tasarrufu</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm"><i class="fa-solid fa-newspaper"></i></span>
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-800">1 Ton Kağıt</p>
+                                        <p class="text-[11px] text-slate-400">Geri dönüştürüldüğünde</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-eco-600">17 Yetişkin Ağaç Kurtulur</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-sm"><i class="fa-solid fa-wine-bottle"></i></span>
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-800">1 Ton Cam</p>
+                                        <p class="text-[11px] text-slate-400">Sonsuz kez geri dönüşür</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-eco-600">100 Litre Petrol Kazancı</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left text-eco-500"></i> Günlük Güncelleme</span>
+                            <span class="font-semibold text-slate-700">Türkiye Geneli Veriler</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Counter Stats Section -->
+    <section id="istatistikler" class="py-16 bg-gradient-to-b from-white to-eco-50/50 border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-eco-600 font-bold text-xs uppercase tracking-widest">Kümülatif Başarı</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Birlikte Neler Başardık?</h2>
+                <p class="text-slate-600 text-sm mt-2">Bilinçli geri dönüşüm yapan topluluğumuzla doğaya kazandırdığımız devasa kaynaklar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stat Card 1 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-tree"></i>
+                    </div>
+                    <div class="text-3xl font-black text-slate-900 mb-1 flex items-baseline">
+                        <span class="counter" data-target="248500">0</span>
+                        <span class="text-eco-600 text-2xl ml-1">+</span>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700">Kurtarılan Ağaç</p>
+                    <p class="text-xs text-slate-400 mt-1">Kağıt ve karton geri dönüşümüyle yok olmaktan kurtuldu.</p>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <div class="text-3xl font-black text-slate-900 mb-1 flex items-baseline">
+                        <span class="counter" data-target="4120000">0</span>
+                        <span class="text-sky-600 text-xl ml-1">Lt</span>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700">Tasarruf Edilen Su</p>
+                    <p class="text-xs text-slate-400 mt-1">Hammadde üretim süreçlerindeki su tüketimi önlendi.</p>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="text-3xl font-black text-slate-900 mb-1 flex items-baseline">
+                        <span class="counter" data-target="1890000">0</span>
+                        <span class="text-amber-600 text-xl ml-1">kWh</span>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700">Enerji Tasarrufu</p>
+                    <p class="text-xs text-slate-400 mt-1">Metal ve plastik geri dönüşümüyle elektrik tasarrufu sağlandı.</p>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </div>
+                    <div class="text-3xl font-black text-slate-900 mb-1 flex items-baseline">
+                        <span class="counter" data-target="86500">0</span>
+                        <span class="text-purple-600 text-xl ml-1">kg</span>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700">Önlenen Sera Gazı (CO₂)</p>
+                    <p class="text-xs text-slate-400 mt-1">Atıkların atmosfere yaydığı karbon emisyonu engellendi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waste Sorting Interactive Guide -->
+    <section id="rehber" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <span class="text-eco-600 font-bold text-xs uppercase tracking-widest">İnteraktif Rehber</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Hangi Atık Hangi Kutuya?</h2>
+                <p class="text-slate-600 text-sm mt-2 max-w-xl">
+                    Kafanız mı karıştı? Kutuları ve atıkları filtreleyin veya arama yaparak doğru kutuya atıp atmadığınızı hemen görün.
+                </p>
+            </div>
+
+            <!-- Search input -->
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input 
+                    type="text" 
+                    id="wasteSearchInput" 
+                    placeholder="Örn: Şişe, pizza kutusu, pil..." 
+                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-eco-500 focus:border-transparent transition-all shadow-sm"
+                >
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none" id="categoryFilterContainer">
+            <button class="filter-btn active-filter px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-eco-600 text-white shadow-sm" data-category="all">
+                Tümü (<span id="totalItemsCount">0</span>)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="plastik">
+                <i class="fa-solid fa-bottle-water text-yellow-500 mr-1.5"></i> Plastik (Sarı)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="kagit">
+                <i class="fa-solid fa-box text-blue-500 mr-1.5"></i> Kağıt / Karton (Mavi)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="cam">
+                <i class="fa-solid fa-champagne-glasses text-emerald-500 mr-1.5"></i> Cam (Yeşil)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="metal">
+                <i class="fa-solid fa-gears text-slate-500 mr-1.5"></i> Metal (Gri)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="elektronik">
+                <i class="fa-solid fa-plug text-red-500 mr-1.5"></i> E-Atık / Pil (Kırmızı)
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-category="organik">
+                <i class="fa-solid fa-apple-whole text-amber-700 mr-1.5"></i> Organik (Kahverengi)
+            </button>
+        </div>
+
+        <!-- Waste Grid -->
+        <div id="wasteCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Cards injected via JavaScript -->
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div id="noResults" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h4 class="font-bold text-slate-800 text-base">Aradığınız kriterde atık bulunamadı</h4>
+            <p class="text-xs text-slate-500 mt-1">Farklı bir kelime aramayı veya kategoriyi sıfırlamayı deneyebilirsiniz.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-eco-100 text-eco-700 rounded-xl text-xs font-semibold hover:bg-eco-200">
+                Filtreleri Sıfırla
+            </button>
+        </div>
+    </section>
+
+    <!-- Interactive Impact & Savings Calculator -->
+    <section id="hesaplayici" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Background glows -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-eco-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-eco-400 font-bold text-xs uppercase tracking-widest">Kişisel Etki Simülatörü</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Dönüştürerek Kazandırdıklarınızı Görün</h2>
+                <p class="text-slate-400 text-sm mt-3">Aylık ortalama geri dönüştürdüğünüz veya ayrıştırdığınız miktarları sürükleyin; doğadaki karşılığını anında hesaplayalım.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                <!-- Sliders Form -->
+                <div class="lg:col-span-7 bg-slate-800/80 p-6 sm:p-8 rounded-3xl border border-slate-700/80 backdrop-blur-md space-y-6">
+                    <!-- Plastic Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-sm font-semibold mb-2">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-bottle-water text-yellow-400"></i> Plastik Şişe / Ambalaj</span>
+                            <span class="text-eco-400 font-bold text-base"><span id="valPlastic">20</span> Adet / Ay</span>
+                        </div>
+                        <input type="range" id="inputPlastic" min="0" max="150" value="20" class="w-full h-2 bg-slate-700 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                            <span>0 Adet</span>
+                            <span>75 Adet</span>
+                            <span>150 Adet</span>
+                        </div>
+                    </div>
+
+                    <!-- Paper Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-sm font-semibold mb-2">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-box text-blue-400"></i> Kağıt / Karton Kutular</span>
+                            <span class="text-eco-400 font-bold text-base"><span id="valPaper">10</span> kg / Ay</span>
+                        </div>
+                        <input type="range" id="inputPaper" min="0" max="100" value="10" class="w-full h-2 bg-slate-700 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                            <span>0 kg</span>
+                            <span>50 kg</span>
+                            <span>100 kg</span>
+                        </div>
+                    </div>
+
+                    <!-- Glass Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-sm font-semibold mb-2">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-wine-bottle text-emerald-400"></i> Cam Şişe & Kavanoz</span>
+                            <span class="text-eco-400 font-bold text-base"><span id="valGlass">8</span> Adet / Ay</span>
+                        </div>
+                        <input type="range" id="inputGlass" min="0" max="80" value="8" class="w-full h-2 bg-slate-700 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                            <span>0 Adet</span>
+                            <span>40 Adet</span>
+                            <span>80 Adet</span>
+                        </div>
+                    </div>
+
+                    <!-- Metal Slider -->
+                    <div>
+                        <div class="flex justify-between items-center text-sm font-semibold mb-2">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-can-food text-slate-300"></i> Metal İçecek & Konserve Kutusu</span>
+                            <span class="text-eco-400 font-bold text-base"><span id="valMetal">12</span> Adet / Ay</span>
+                        </div>
+                        <input type="range" id="inputMetal" min="0" max="100" value="12" class="w-full h-2 bg-slate-700 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+                            <span>0 Adet</span>
+                            <span>50 Adet</span>
+                            <span>100 Adet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculated Results Card -->
+                <div class="lg:col-span-5 bg-gradient-to-br from-eco-900/90 to-slate-900 p-8 rounded-3xl border border-eco-500/30 shadow-2xl relative">
+                    <div class="inline-block px-3 py-1 rounded-full bg-eco-500/20 text-eco-400 text-xs font-semibold mb-4">
+                        1 Yılda Sağlanan Net Kazancınız
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6">Yıllık Doğa Karneniz</h3>
+
+                    <div class="space-y-5">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-tree"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400">Ağaç Kurtarma</p>
+                                    <p class="text-sm font-semibold text-white">Orman Katkısı</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="resTrees" class="text-2xl font-black text-eco-400">2.04</span>
+                                <span class="text-xs text-slate-400 ml-1">Ağaç/Yıl</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-water"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400">Temiz Su</p>
+                                    <p class="text-sm font-semibold text-white">Su Tasarrufu</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="resWater" class="text-2xl font-black text-sky-400">3,120</span>
+                                <span class="text-xs text-slate-400 ml-1">Litre</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400">Elektrik</p>
+                                    <p class="text-sm font-semibold text-white">Enerji Tasarrufu</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="resEnergy" class="text-2xl font-black text-amber-400">184</span>
+                                <span class="text-xs text-slate-400 ml-1">kWh</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-smog"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400">Karbon Emisyonu</p>
+                                    <p class="text-sm font-semibold text-white">Önlenen CO₂</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="resCo2" class="text-2xl font-black text-rose-400">46.8</span>
+                                <span class="text-xs text-slate-400 ml-1">kg CO₂</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="shareCalculatorResults()" class="mt-8 w-full py-3.5 rounded-2xl bg-eco-500 hover:bg-eco-600 font-bold text-white text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-eco-500/20">
+                        <i class="fa-solid fa-share-nodes"></i> Sonucu Panoya Kopyala
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips & Zero Waste Lifestyle -->
+    <section id="ipuclari" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-eco-600 font-bold text-xs uppercase tracking-widest">Sürdürülebilir Alışkanlıklar</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Sıfır Atık İçin 5 Altın Kural</h2>
+            <p class="text-slate-600 text-sm mt-3">Geri dönüşüm önemlidir; ancak asıl hedef atığı en baştan üretmemektir (5R Felsefesi).</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Tip 1 -->
+            <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold mb-5">
+                    1
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Reddet (Refuse)</h3>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    İhtiyacınız olmayan tek kullanımlık plastik poşetleri, pipetleri, broşürleri ve promosyon ürünlerini kibarca reddedin. En temiz atık, hiç oluşmamış olandır.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-eco-700 font-medium">
+                    Örnek: Bez çanta ve matara taşımak.
+                </div>
+            </div>
+
+            <!-- Tip 2 -->
+            <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold mb-5">
+                    2
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Azalt (Reduce)</h3>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    Tüketim çılgınlığının önüne geçin. Ambalajsız veya dökme ürünleri tercih edin. Gerçekten ihtiyacınız olan kadarını satın alın.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-eco-700 font-medium">
+                    Örnek: Büyük boy aile ambalajları seçmek.
+                </div>
+            </div>
+
+            <!-- Tip 3 -->
+            <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold mb-5">
+                    3
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Yeniden Kullan (Reuse)</h3>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    Kavanozları bakliyat saklamak için yıkayın, eski kıyafetleri temizlik bezi yapın ve bozulan eşyalarınızı atmadan önce onarmayı deneyin.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-eco-700 font-medium">
+                    Örnek: Cam kavanozları yeniden kullanmak.
+                </div>
+            </div>
+
+            <!-- Tip 4 -->
+            <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-eco-100 text-eco-600 flex items-center justify-center text-xl font-bold mb-5">
+                    4
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Geri Dönüştür (Recycle)</h3>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    Ömrü tükenen materyalleri temizleyerek doğru geri dönüşüm kumbarasına atın. Kontaminasyonu (kirletmeyi) önlemek için mutlaka çalkalayın.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-eco-700 font-medium">
+                    Örnek: Yağlı pizza kutusunu kağıt kutusuna atmamak!
+                </div>
+            </div>
+
+            <!-- Tip 5 -->
+            <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all md:col-span-2">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-bold mb-5">
+                    5
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Çürüt / Kompost Yap (Rot)</h3>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    Meyve, sebze kabukları, kahve telvesi ve çay posaları çöp sahalarına gittiğinde metan gazı üretir. Bunları kompost yaparak ev bitkileriniz veya bahçeniz için mucizevi bir gübreye dönüştürebilirsiniz.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-eco-700 font-medium flex items-center justify-between">
+                    <span>Organik atıklar evsel çöpün yaklaşık %50'sini oluşturur.</span>
+                    <span class="font-bold text-eco-800">Bokashi veya Soğuk Kompost</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Frequently Asked Questions (Accordion) -->
+    <section id="sss" class="py-20 bg-slate-100/70 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-eco-600 font-bold text-xs uppercase tracking-widest">Merak Edilenler</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Sıkça Sorulan Sorular</h2>
+                <p class="text-slate-600 text-sm mt-2">Geri dönüşümle ilgili en çok merak edilen püf noktalar.</p>
+            </div>
+
+            <div class="space-y-4" id="faqAccordion">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all">
+                    <button class="w-full px-6 py-5 text-left font-bold text-slate-800 flex items-center justify-between focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Atıkları kutuya atmadan önce yıkamalı mıyım?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                        Kapsamlı bir deterjanlı yıkama şart değildir, ancak içinde gıda artığı kalmayacak şekilde hafifçe çalkalamak çok önemlidir. Yoğurt kabı veya konserve kutusundaki yemek artıkları, geri dönüşüm bandındaki diğer kağıt ve kartonları kirleterek geri dönüştürülemez hale getirebilir.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all">
+                    <button class="w-full px-6 py-5 text-left font-bold text-slate-800 flex items-center justify-between focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Yağlı pizza kutuları ve fırın kağıtları geri dönüştürülür mü?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                        <strong>Hayır.</strong> Yağ ve gıda bulaşmış kağıt ve karton lifleri hamur haline getirilirken sudan ayrılamaz ve geri dönüşüm sürecini bozar. Pizza kutusunun yalnızca tertemiz kalan üst kapağını yırtıp kağıt kutusuna atabilir, yağlı tabanı ise evsel (genel) çöpe veya komposta atmalısınız.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all">
+                    <button class="w-full px-6 py-5 text-left font-bold text-slate-800 flex items-center justify-between focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Ayna, porselen ve ısıya dayanıklı camlar cam kutusuna atılır mı?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                        <strong>Kesinlikle hayır.</strong> Borcam (ısıya dayanıklı cam), porselen, seramik, ayna ve pencere camlarının erime sıcaklıkları şişe/kavanoz camlarından farklıdır. Bu malzemelerin yeşil cam kutusuna atılması eritme fırınlarında topaklanmaya sebep olur. Sadece içecek şişeleri ve gıda kavanozları atılmalıdır.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all">
+                    <button class="w-full px-6 py-5 text-left font-bold text-slate-800 flex items-center justify-between focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Elektronik atıkları ve pilleri nereye vermeliyim?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                        Piller ağır metaller (cıva, kurşun, kadmiyum) içerir ve toprağı/suyu zehirler. Atık piller marketlerde, okullarda ve muhtarlıklarda bulunan <strong>TAP kırmızı pil kutularına</strong> atılmalıdır. Eski telefon, bilgisayar ve kablolar belediyelerin 1. Sınıf Atık Getirme Merkezlerine veya yetkili teknoloji mağazalarına teslim edilmelidir.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call To Action & Newsletter -->
+    <section class="py-16 bg-eco-900 text-white relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+            <span class="inline-block px-3 py-1 bg-eco-800 text-eco-300 text-xs font-bold rounded-full mb-3">Yeşil Harekete Katılın</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">E-Bültene Kaydolun, Çevre Dostu Kalın</h2>
+            <p class="text-eco-200 text-sm max-w-xl mx-auto mt-2">Her hafta sıfır atık tarifleri, kompost rehberleri ve yerel geri dönüşüm noktası güncellemeleri posta kutunuzda olsun.</p>
+
+            <form id="newsletterForm" onsubmit="handleNewsletter(event)" class="mt-8 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input 
+                    type="email" 
+                    id="newsletterEmail" 
+                    placeholder="E-posta adresiniz..." 
+                    required 
+                    class="px-5 py-3.5 rounded-2xl text-slate-800 bg-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-eco-400 flex-1"
+                >
+                <button type="submit" class="px-6 py-3.5 rounded-2xl bg-eco-500 hover:bg-eco-400 text-slate-900 font-bold text-sm transition-all shadow-lg hover:shadow-eco-500/30 whitespace-nowrap">
+                    Aramıza Katıl
+                </button>
+            </form>
+            <p class="text-[11px] text-eco-300/70 mt-3">Spam yok. İstediğiniz an tek tıkla ayrılabilirsiniz.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 pt-16 pb-12 border-t border-slate-900 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                <!-- Col 1 -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-xl bg-eco-600 text-white flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-recycle"></i>
+                        </div>
+                        <span class="text-lg font-bold text-white">YeşilGelecek</span>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Toplumda çevre bilincini artırmak, geri dönüşüm alışkanlıklarını pekiştirmek ve gezegenimizi gelecek nesillere daha yaşanabilir kılmak amacıyla kurulmuş bağımsız sıfır atık girişimidir.
+                    </p>
+                </div>
+
+                <!-- Col 2 -->
+                <div>
+                    <h5 class="text-white font-bold mb-3 text-sm">Hızlı Erişim</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#rehber" class="hover:text-eco-400 transition-colors">Atık Sınıflandırma Tablosu</a></li>
+                        <li><a href="#hesaplayici" class="hover:text-eco-400 transition-colors">Karbon Ayak İzi Simülatörü</a></li>
+                        <li><a href="#istatistikler" class="hover:text-eco-400 transition-colors">Ulusal Tasarruf İstatistikleri</a></li>
+                        <li><a href="#sss" class="hover:text-eco-400 transition-colors">Sıkça Sorulan Sorular</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 -->
+                <div>
+                    <h5 class="text-white font-bold mb-3 text-sm">Geri Dönüşüm Kategorileri</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#rehber" onclick="filterByCategory('plastik')" class="hover:text-eco-400 transition-colors">Plastik & PET Şişe</a></li>
+                        <li><a href="#rehber" onclick="filterByCategory('kagit')" class="hover:text-eco-400 transition-colors">Karton & Gazete</a></li>
+                        <li><a href="#rehber" onclick="filterByCategory('cam')" class="hover:text-eco-400 transition-colors">Cam Şişe & Kavanoz</a></li>
+                        <li><a href="#rehber" onclick="filterByCategory('elektronik')" class="hover:text-eco-400 transition-colors">Atık Piller & E-Atık</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div>
+                    <h5 class="text-white font-bold mb-3 text-sm">Bize Ulaşın</h5>
+                    <p class="text-slate-400 mb-3">Okul, kurum veya sitenizde sıfır atık semineri düzenlemek ister misiniz?</p>
+                    <a href="mailto:info@yesilgelecek.org" class="text-eco-400 font-semibold hover:underline block mb-2">
+                        <i class="fa-solid fa-envelope mr-1.5"></i> info@yesilgelecek.org
+                    </a>
+                    <div class="flex items-center gap-3 mt-4 text-slate-300">
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-eco-600 flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-eco-600 flex items-center justify-center transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-eco-600 flex items-center justify-center transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-slate-500 gap-4">
+                <p>© 2026 YeşilGelecek Portalı. Temiz bir dünya için sevgiyle geliştirildi.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-slate-400">Gizlilik Politikası</a>
+                    <a href="#" class="hover:text-slate-400">Kullanım Koşulları</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Waste Database items
+        const wasteDatabase = [
+            {
+                id: 1,
+                name: "Su ve Meşrubat Şişesi (PET)",
+                category: "plastik",
+                binColor: "Sarı Kutu",
+                icon: "fa-bottle-water",
+                colorClass: "bg-yellow-100 text-yellow-700 border-yellow-200",
+                badgeClass: "bg-yellow-50 text-yellow-800 border-yellow-300",
+                canRecycle: true,
+                preparation: "İçindeki sıvıyı boşaltın, kapağını çıkarıp hacim küçültmek için ezin.",
+                note: "Geri dönüştürülerek polar mont, halı ve yeni ambalajlara dönüşür."
+            },
+            {
+                id: 2,
+                name: "Karton Kargo Kutusu",
+                category: "kagit",
+                binColor: "Mavi Kutu",
+                icon: "fa-box-open",
+                colorClass: "bg-blue-100 text-blue-700 border-blue-200",
+                badgeClass: "bg-blue-50 text-blue-800 border-blue-300",
+                canRecycle: true,
+                preparation: "Üzerindeki koli bantlarını ve plastik etiketleri sökün, düzleştirip katlayın.",
+                note: "Her ton karton yaklaşık 17 yetişkin çam ağacını kesilmekten kurtarır."
+            },
+            {
+                id: 3,
+                name: "Maden Suyu & İçecek Şişesi",
+                category: "cam",
+                binColor: "Yeşil Kutu",
+                icon: "fa-wine-bottle",
+                colorClass: "bg-emerald-100 text-emerald-700 border-emerald-200",
+                badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-300",
+                canRecycle: true,
+                preparation: "İçini hafifçe suyla durulayın. Metal kapağını çıkarıp metal kutusuna atın.",
+                note: "Cam, kalitesini hiç kaybetmeden %100 oranında sonsuz defa dönüştürülebilir."
+            },
+            {
+                id: 4,
+                name: "Alüminyum İçecek Kutusu",
+                category: "metal",
+                binColor: "Gri Kutu",
+                icon: "fa-cubes-stacked",
+                colorClass: "bg-slate-200 text-slate-700 border-slate-300",
+                badgeClass: "bg-slate-100 text-slate-800 border-slate-300",
+                canRecycle: true,
+                preparation: "İçini boşaltın ve ayakla veya elle ezerek hacmini küçültün.",
+                note: "Alüminyum geri dönüşümü sıfırdan boksit cevherinden üretmeye göre %95 enerji tasarrufu sağlar."
+            },
+            {
+                id: 5,
+                name: "Kullanılmış Piller & Bataryalar",
+                category: "elektronik",
+                binColor: "Kırmızı / TAP Kutusu",
+                icon: "fa-car-battery",
+                colorClass: "bg-red-100 text-red-700 border-red-200",
+                badgeClass: "bg-red-50 text-red-800 border-red-300",
+                canRecycle: true,
+                preparation: "Akan piller varsa temas etmeyin, ayrı bir poşette kırmızı pil toplama kutusuna atın.",
+                note: "1 adet kalem pil doğaya atıldığında 4 metrekare toprağı ve yer altı sularını zehirleyebilir."
+            },
+            {
+                id: 6,
+                name: "Meyve & Sebze Kabukları",
+                category: "organik",
+                binColor: "Kahverengi Kutu / Kompost",
+                icon: "fa-apple-whole",
+                colorClass: "bg-amber-100 text-amber-800 border-amber-200",
+                badgeClass: "bg-amber-50 text-amber-900 border-amber-300",
+                canRecycle: true,
+                preparation: "Plastik veya yapışkan etiketleri üzerinden söküp kompost kutusuna ekleyin.",
+                note: "Düzenli depolama sahalarında metan üretmek yerine değerli bir organik gübreye dönüşür."
+            },
+            {
+                id: 7,
+                name: "Süt ve Meyve Suyu Kutusu (Tetrapak)",
+                category: "kagit",
+                binColor: "Mavi Kutu",
+                icon: "fa-blender-phone",
+                colorClass: "bg-blue-100 text-blue-700 border-blue-200",
+                badgeClass: "bg-blue-50 text-blue-800 border-blue-300",
+                canRecycle: true,
+                preparation: "İyice çalkalayıp düzleştirin. Plastik kapağını sarı plastik kutusuna atabilirsiniz.",
+                note: "Kompozit malzeme olmasına rağmen modern ayrıştırma tesislerinde kağıdı ayrıştırılır."
+            },
+            {
+                id: 8,
+                name: "Yağlı Pizza Kutusu",
+                category: "kagit",
+                binColor: "Geri Dönüşmez! (Genel Çöp)",
+                icon: "fa-pizza-slice",
+                colorClass: "bg-orange-100 text-orange-800 border-orange-200",
+                badgeClass: "bg-orange-50 text-orange-900 border-orange-300",
+                canRecycle: false,
+                preparation: "Yağ bulaşmış alt kısmı genel çöpe atın. Temiz kalmış üst kapağı yırtıp mavi kutuya atabilirsiniz.",
+                note: "Gıda yağları kağıt hamurunu bozar ve tüm partinin heba olmasına neden olur."
+            },
+            {
+                id: 9,
+                name: "Konserve ve Salça Tenekesi",
+                category: "metal",
+                binColor: "Gri Kutu",
+                icon: "fa-can-food",
+                colorClass: "bg-slate-200 text-slate-700 border-slate-300",
+                badgeClass: "bg-slate-100 text-slate-800 border-slate-300",
+                canRecycle: true,
+                preparation: "İçindeki salça ve gıda artıklarını suyla durulayın, kapağı içine kıvırın.",
+                note: "Demir ve çelik hurdalar ergitilerek inşaat demiri veya beyaz eşya parçalarına dönüştürülür."
+            }
+        ];
+
+        // Global State
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // DOM elements
+        const wasteCardsGrid = document.getElementById('wasteCardsGrid');
+        const wasteSearchInput = document.getElementById('wasteSearchInput');
+        const noResults = document.getElementById('noResults');
+        const totalItemsCount = document.getElementById('totalItemsCount');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        // Initialize Total Counter
+        totalItemsCount.textContent = wasteDatabase.length;
+
+        // Render Waste Cards
+        function renderWasteCards() {
+            const filtered = wasteDatabase.filter(item => {
+                const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      item.note.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      item.binColor.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            wasteCardsGrid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between";
+                
+                const statusBadge = item.canRecycle 
+                    ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <i class="fa-solid fa-check text-[10px]"></i> Dönüştürülebilir
+                       </span>`
+                    : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                        <i class="fa-solid fa-xmark text-[10px]"></i> Dönüştürülemez
+                       </span>`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-2xl ${item.colorClass} border flex items-center justify-center text-xl shadow-sm">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            ${statusBadge}
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 mb-1.5 leading-snug">${item.name}</h4>
+                        <div class="inline-block px-3 py-1 rounded-xl text-xs font-bold mb-4 ${item.badgeClass} border">
+                            <i class="fa-solid fa-dumpster mr-1"></i> ${item.binColor}
+                        </div>
+                        <div class="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                            <p><strong class="text-slate-800">Nasıl Hazırlanmalı?</strong> ${item.preparation}</p>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-eco-600"></i> ${item.note}
+                    </div>
+                `;
+                wasteCardsGrid.appendChild(card);
+            });
+        }
+
+        // Category Filter Click Handler
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-eco-600', 'text-white', 'shadow-sm');
+                    b.classList.add('bg-white', 'text-slate-600');
+                });
+                btn.classList.add('bg-eco-600', 'text-white', 'shadow-sm');
+                btn.classList.remove('bg-white', 'text-slate-600');
+
+                currentCategory = btn.getAttribute('data-category');
+                renderWasteCards();
+            });
+        });
+
+        function filterByCategory(cat) {
+            const targetBtn = document.querySelector(`[data-category="${cat}"]`);
+            if (targetBtn) {
+                targetBtn.click();
+            }
+        }
+
+        function resetFilters() {
+            wasteSearchInput.value = '';
+            searchQuery = '';
+            filterByCategory('all');
+        }
+
+        // Live Search Handler
+        wasteSearchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            renderWasteCards();
+        });
+
+        // Mobile Menu Toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // ==========================================
+        // IMPACT CALCULATOR LOGIC
+        // ==========================================
+        const inputPlastic = document.getElementById('inputPlastic');
+        const inputPaper = document.getElementById('inputPaper');
+        const inputGlass = document.getElementById('inputGlass');
+        const inputMetal = document.getElementById('inputMetal');
+
+        const valPlastic = document.getElementById('valPlastic');
+        const valPaper = document.getElementById('valPaper');
+        const valGlass = document.getElementById('valGlass');
+        const valMetal = document.getElementById('valMetal');
+
+        const resTrees = document.getElementById('resTrees');
+        const resWater = document.getElementById('resWater');
+        const resEnergy = document.getElementById('resEnergy');
+        const resCo2 = document.getElementById('resCo2');
+
+        function calculateImpact() {
+            const plasticMonthly = parseFloat(inputPlastic.value) || 0;
+            const paperMonthly = parseFloat(inputPaper.value) || 0;
+            const glassMonthly = parseFloat(inputGlass.value) || 0;
+            const metalMonthly = parseFloat(inputMetal.value) || 0;
+
+            valPlastic.textContent = plasticMonthly;
+            valPaper.textContent = paperMonthly;
+            valGlass.textContent = glassMonthly;
+            valMetal.textContent = metalMonthly;
+
+            // Yearly calculations
+            const plasticYearly = plasticMonthly * 12;
+            const paperYearly = paperMonthly * 12; // in kg
+            const glassYearly = glassMonthly * 12;
+            const metalYearly = metalMonthly * 12;
+
+            // Environmental multipliers based on official EPA / T.C. Çevre Bakanlığı averages:
+            // Trees: 1 ton paper = 17 trees -> 1 kg paper = 0.017 trees
+            const trees = (paperYearly * 0.017).toFixed(2);
+
+            // Water: Paper saves 26L/kg, Plastic saves ~1.5L/bottle, Metal saves ~4L/can
+            const water = Math.round((paperYearly * 26) + (plasticYearly * 1.5) + (metalYearly * 4.2));
+
+            // Energy in kWh:
+            // Plastic bottle: ~0.2 kWh
+            // Paper kg: ~4.1 kWh
+            // Metal can: ~0.45 kWh
+            // Glass bottle: ~0.15 kWh
+            const energy = Math.round((plasticYearly * 0.2) + (paperYearly * 4.1) + (metalYearly * 0.45) + (glassYearly * 0.15));
+
+            // CO2 saved in kg:
+            // Plastic: 0.08 kg per bottle
+            // Paper: 1.3 kg per kg paper
+            // Metal: 0.12 kg per can
+            // Glass: 0.3 kg per bottle
+            const co2 = ((plasticYearly * 0.08) + (paperYearly * 1.3) + (metalYearly * 0.12) + (glassYearly * 0.3)).toFixed(1);
+
+            // Animate / Display
+            resTrees.textContent = trees;
+            resWater.textContent = water.toLocaleString('tr-TR');
+            resEnergy.textContent = energy.toLocaleString('tr-TR');
+            resCo2.textContent = co2;
+        }
+
+        [inputPlastic, inputPaper, inputGlass, inputMetal].forEach(input => {
+            input.addEventListener('input', calculateImpact);
+        });
+
+        // Share Calculator Results
+        function shareCalculatorResults() {
+            const summary = `🌱 YeşilGelecek ile hesapladım! Yılda geri dönüşümle:\n` +
+                            `🌲 ${resTrees.textContent} Ağaç\n` +
+                            `💧 ${resWater.textContent} Litre Temiz Su\n` +
+                            `⚡ ${resEnergy.textContent} kWh Enerji\n` +
+                            `🌍 ${resCo2.textContent} kg CO₂ tasarrufu sağlayabiliyorum!`;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(summary).then(() => {
+                    showToast("Sonuçlar Kopyalandı!", "Çevreye katkı karnenizi dilediğiniz yerde paylaşabilirsiniz.");
+                }).catch(() => {
+                    fallbackCopy(summary);
+                });
+            } else {
+                fallbackCopy(summary);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const temp = document.createElement("textarea");
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+            showToast("Sonuçlar Kopyalandı!", "Çevreye katkı karneniz panoya alındı.");
+        }
+
+        // ==========================================
+        // FAQ ACCORDION TOGGLE
+        // ==========================================
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('i');
+            const isOpen = !content.classList.contains('hidden');
+
+            // Close all
+            document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.faq-item i').forEach(ic => ic.classList.remove('rotate-180'));
+
+            if (!isOpen) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // ==========================================
+        // NUMBER COUNTER ANIMATION
+        // ==========================================
+        function runCounters() {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target.toLocaleString('tr-TR');
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current).toLocaleString('tr-TR');
+                    }
+                }, 16);
+            });
+        }
+
+        // Run Counters on first view using IntersectionObserver
+        const statsSection = document.getElementById('istatistikler');
+        let counterTriggered = false;
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !counterTriggered) {
+                runCounters();
+                counterTriggered = true;
+            }
+        }, { threshold: 0.3 });
+        observer.observe(statsSection);
+
+        // ==========================================
+        // NEWSLETTER SUBMISSION
+        // ==========================================
+        function handleNewsletter(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('newsletterEmail');
+            if (emailInput.value) {
+                showToast("Aramıza Hoş Geldiniz!", `${emailInput.value} adresine onay e-postası iletildi.`);
+                emailInput.value = '';
+            }
+        }
+
+        // ==========================================
+        // CUSTOM TOAST NOTIFICATION
+        // ==========================================
+        let toastTimeout;
+        function showToast(title, message) {
+            const box = document.getElementById('toastBox');
+            const tTitle = document.getElementById('toastTitle');
+            const tMsg = document.getElementById('toastMessage');
+
+            tTitle.textContent = title;
+            tMsg.textContent = message;
+
+            clearTimeout(toastTimeout);
+            box.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            box.classList.add('translate-y-0', 'opacity-100');
+
+            toastTimeout = setTimeout(() => {
+                hideToast();
+            }, 4000);
+        }
+
+        function hideToast() {
+            const box = document.getElementById('toastBox');
+            box.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+            box.classList.remove('translate-y-0', 'opacity-100');
+        }
+
+        // Run on initial load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderWasteCards();
+            calculateImpact();
+        });
+    </script>
+</body>
+</html>
